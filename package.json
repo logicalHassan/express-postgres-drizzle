@@ -12,6 +12,12 @@
     "lint:fix": "biome check src/ --fix",
     "format": "biome format src/",
     "test": "echo Add a test library",
+    "db:generate": "npx drizzle-kit generate",
+    "db:push": "npx drizzle-kit push",
+    "db:sync": "npm run db:generate && npm run db:push",
+    "db:reset": "rm -rf drizzle/migrations && npm run db:sync",
+    "db:studio": "npx drizzle-kit studio",
+    "db:seed": "tsx src/db/seed.ts",
     "prepare": "husky"
   },
   "keywords": [],
@@ -34,7 +40,6 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "pg": "^8.13.3",
-    "postgres": "^3.4.5",
     "validator": "^13.12.0",
     "winston": "^3.17.0",
     "xss": "^1.0.15"
@@ -61,13 +66,11 @@
     "tsx": "^4.19.3",
     "typescript": "^5.7.3"
   },
+  "lint-staged": {
+    "*.{js,ts,cjs,mjs,d.cts,d.mts,json,jsonc}": ["biome check --apply --no-errors-on-unmatched"]
+  },
   "tsup": {
-    "entry": [
-      "src",
-      "!src/types",
-      "!src/**/__tests__/**",
-      "!src/**/*.test.*"
-    ],
+    "entry": ["src", "!src/types", "!src/db/migrations/**", "!src/**/__tests__/**", "!src/**/*.test.*"],
     "splitting": false,
     "sourcemap": true,
     "clean": true

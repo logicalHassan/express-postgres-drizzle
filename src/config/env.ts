@@ -1,5 +1,5 @@
+import path from "node:path";
 import dotenv from "dotenv";
-import path from "path";
 import Joi from "joi";
 
 dotenv.config({ path: path.join(__dirname, "../../.env") });
@@ -17,9 +17,6 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string(),
     SMTP_PASSWORD: Joi.string(),
     EMAIL_FROM: Joi.string(),
-    YOUTUBE_API_KEY: Joi.string().required(),
-    YOUTUBE_CHANNEL_ID: Joi.string().required(),
-    YOUTUBE_BASE_URL: Joi.string().required(),
     FRONTEND_URL: Joi.string().required(),
     BACKEND_URL: Joi.string(),
   })
@@ -53,11 +50,6 @@ export const env = {
       },
     },
     from: envVars.EMAIL_FROM,
-  },
-  yt: {
-    apiKey: envVars.YOUTUBE_API_KEY,
-    channelId: envVars.YOUTUBE_CHANNEL_ID,
-    baseUrl: envVars.YOUTUBE_BASE_URL,
   },
   frontend: {
     url: envVars.FRONTEND_URL,

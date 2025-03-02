@@ -1,6 +1,6 @@
 import db from "@/db";
+import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { users } from "@/db/user.schema";
 
 // Create User
 export const createUser = async (name: string, email: string) => {
