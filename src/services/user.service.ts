@@ -1,32 +1,73 @@
 import db from "@/db";
 import { users } from "@/db/schema";
+import { ApiError } from "@/utils";
 import { eq } from "drizzle-orm";
+import httpStatus from "http-status";
 
-// Create User
-export const createUser = async (name: string, email: string) => {
-  const newUser = await db.insert(users).values({ name, email }).returning();
-  return newUser[0]; // Return the created user
+// Infer types from Drizzle
+type NewUser = typeof users.$inferInsert;
+type User = typeof users.$inferSelect;
+type UserID = User["id"];
+
+/**
+ * Create a new user
+ * @param data - User data (name, email, password, role, etc.)
+ * @returns Created user
+ */
+export const createUser = async (data: NewUser): Promise<User> => {
+  const [newUser] = await db.insert(users).values(data).returning();
+  return newUser;
 };
 
-// Get All Users
-export const getAllUsers = async () => {
+/**
+ * Get all users
+ * @returns List of users
+ */
+export const getAllUsers = async (): Promise<User[]> => {
   return await db.select().from(users);
 };
 
-// Get User By ID
-export const getUserById = async (id: number) => {
-  const user = await db.select().from(users).where(eq(users.id, id));
-  return user[0] || null;
+/**
+ * Get a user by ID
+ * @param id - User ID
+ * @returns User or null if not found
+ */
+export const getUserById = async (id: UserID): Promise<Omit<User, "password">> => {
+  const [user] = await db.select().from(users).where(eq(users.id, id));
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  return user;
 };
 
-// Update User
-export const updateUser = async (id: number, data: { name?: string; email?: string }) => {
-  const updatedUser = await db.update(users).set(data).where(eq(users.id, id)).returning();
-  return updatedUser[0] || null;
+/**
+ * Update a user
+ * @param id - User ID
+ * @param data - Partial user data (optional fields)
+ * @returns Updated user or null if not found
+ */
+export const updateUser = async (id: UserID, data: Partial<NewUser>): Promise<User | null> => {
+  const [updatedUser] = await db.update(users).set(data).where(eq(users.id, id)).returning();
+  return updatedUser ?? null;
 };
 
-// Delete User
-export const deleteUser = async (id: number) => {
-  const deletedUser = await db.delete(users).where(eq(users.id, id)).returning();
-  return deletedUser[0] || null;
+/**
+ * Delete a user
+ * @param id - User ID
+ * @returns Deleted user or null if not found
+ */
+export const deleteUser = async (id: UserID): Promise<User | null> => {
+  const [deletedUser] = await db.delete(users).where(eq(users.id, id)).returning();
+  return deletedUser ?? null;
+};
+
+// Export as a utility module
+export default {
+  createUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
 };
