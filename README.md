@@ -71,8 +71,6 @@ This is a well-structured boilerplate for building RESTful APIs using **Node.js*
 
 3. Configure environment variables:
    
-   - Copy `.env.example` to `.env` and update database credentials.
-   
    ```sh
    cp .env.example .env
    ```
@@ -136,5 +134,4 @@ This project is licensed under the MIT License.
 
 ---
 
-Made with ❤️ by [Muhammad Hassan](https://github.com/your-username)
-
+Made with ❤️ by [Muhammad Hassan](https://github.com/logicalHassan)
