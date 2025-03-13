@@ -6,6 +6,11 @@
     "lineEnding": "lf"
   },
   "organizeImports": { "enabled": true },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {

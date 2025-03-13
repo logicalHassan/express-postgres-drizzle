@@ -1,14 +1,14 @@
-import { env } from "@/config";
-import { tokenTypes } from "@/config/tokens";
-import db from "@/db";
-import { tokens } from "@/db/schema";
-import type { User } from "@/types";
-import { ApiError } from "@/utils";
-import { and, eq } from "drizzle-orm";
-import httpStatus from "http-status";
-import jwt from "jsonwebtoken";
-import moment from "moment";
-import userService from "./user.service";
+import { env } from '@/config';
+import { tokenTypes } from '@/config/tokens';
+import db from '@/db';
+import { tokens } from '@/db/schema';
+import type { User } from '@/types';
+import { ApiError } from '@/utils';
+import { and, eq } from 'drizzle-orm';
+import httpStatus from 'http-status';
+import jwt from 'jsonwebtoken';
+import moment from 'moment';
+import userService from './user.service';
 
 type TokenPayload = typeof tokens.$inferInsert;
 
@@ -57,23 +57,23 @@ const verifyToken = async (token: string, type: string) => {
     );
 
   if (!tokenDoc || tokenDoc.length === 0) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Token not found or is blacklisted");
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Token not found or is blacklisted');
   }
 
   return tokenDoc[0];
 };
 
 const generateAuthTokens = async (user: User) => {
-  const accessTokenExpires = moment().add(env.jwt.accessExpirationMinutes, "minutes");
+  const accessTokenExpires = moment().add(env.jwt.accessExpirationMinutes, 'minutes');
   const accessToken = generateToken(user.id, accessTokenExpires, tokenTypes.ACCESS);
 
-  const refreshTokenExpires = moment().add(env.jwt.refreshExpirationDays, "days");
+  const refreshTokenExpires = moment().add(env.jwt.refreshExpirationDays, 'days');
   const refreshToken = generateToken(user.id, refreshTokenExpires, tokenTypes.REFRESH);
 
   await saveToken({
     token: refreshToken,
     userId: user.id,
-    expires: refreshTokenExpires.format("YYYY-MM-DD"),
+    expires: refreshTokenExpires.format('YYYY-MM-DD'),
     type: tokenTypes.REFRESH,
   });
 
@@ -92,14 +92,14 @@ const generateAuthTokens = async (user: User) => {
 const generateResetPasswordToken = async (email: string) => {
   const user = await userService.getUserByEmail(email);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "No user found with this email");
+    throw new ApiError(httpStatus.NOT_FOUND, 'No user found with this email');
   }
-  const expires = moment().add(env.jwt.resetPasswordExpirationMinutes, "minutes");
+  const expires = moment().add(env.jwt.resetPasswordExpirationMinutes, 'minutes');
   const token = generateToken(user.id, expires, tokenTypes.RESET_PASSWORD);
 
   const tokenPayload = {
     token,
-    expires: expires.format("YYYY-MM-DD"),
+    expires: expires.format('YYYY-MM-DD'),
     userId: user.id,
     type: tokenTypes.RESET_PASSWORD,
   };
@@ -109,12 +109,12 @@ const generateResetPasswordToken = async (email: string) => {
 };
 
 const generateVerifyEmailToken = async (user: User) => {
-  const expires = moment().add(env.jwt.verifyEmailExpirationMinutes, "minutes");
+  const expires = moment().add(env.jwt.verifyEmailExpirationMinutes, 'minutes');
   const token = generateToken(user.id, expires, tokenTypes.VERIFY_EMAIL);
 
   const tokenPayload = {
     token,
-    expires: expires.format("YYYY-MM-DD"),
+    expires: expires.format('YYYY-MM-DD'),
     userId: user.id,
     type: tokenTypes.VERIFY_EMAIL,
   };

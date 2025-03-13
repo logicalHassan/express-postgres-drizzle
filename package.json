@@ -10,7 +10,7 @@
     "clean": "rm -rf dist",
     "lint": "biome check src/",
     "lint:fix": "biome check src/ --fix",
-    "format": "biome format src/",
+    "format": "biome format src/ --fix",
     "test": "echo Add a test library",
     "db:generate": "npx drizzle-kit generate",
     "db:push": "npx drizzle-kit push",

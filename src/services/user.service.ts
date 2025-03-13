@@ -1,8 +1,8 @@
-import db from "@/db";
-import { users } from "@/db/schema";
-import { ApiError } from "@/utils";
-import { eq } from "drizzle-orm";
-import httpStatus from "http-status";
+import db from '@/db';
+import { users } from '@/db/schema';
+import { ApiError } from '@/utils';
+import { eq } from 'drizzle-orm';
+import httpStatus from 'http-status';
 
 // Infer types from Drizzle
 type UserPayload = typeof users.$inferInsert;
@@ -42,11 +42,11 @@ export const getAllUsers = async (): Promise<User[]> => {
  * @param id - User ID
  * @returns User or null if not found
  */
-export const getUserById = async (id: string): Promise<Omit<User, "password">> => {
+export const getUserById = async (id: string): Promise<Omit<User, 'password'>> => {
   const [user] = await db.select().from(users).where(eq(users.id, id));
 
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   return user;

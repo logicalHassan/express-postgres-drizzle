@@ -1,7 +1,7 @@
-import type { Request } from "express";
-import type { User } from ".";
+import type { Request } from 'express';
+import type { User } from '.';
 
-declare module "express" {
+declare module 'express' {
   export interface Request {
     user?: User;
   }

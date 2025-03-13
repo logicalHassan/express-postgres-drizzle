@@ -1,20 +1,20 @@
-import "express-async-errors";
-import helmet from "helmet";
-import express from "express";
-import mongoSanitize from "express-mongo-sanitize";
-import compression from "compression";
-import httpStatus from "http-status";
-import cors from "cors";
-import routes from "@/routes/v1";
-import morgan from "@/config/morgan";
-import { ApiError } from "@/utils";
-import { corsOptions, env } from "@/config";
-import { authLimiter } from "@/middlewares/rateLimiter";
-import { errorConverter, errorHandler } from "@/middlewares/error";
+import 'express-async-errors';
+import { corsOptions, env } from '@/config';
+import morgan from '@/config/morgan';
+import { errorConverter, errorHandler } from '@/middlewares/error';
+import { authLimiter } from '@/middlewares/rateLimiter';
+import routes from '@/routes/v1';
+import { ApiError } from '@/utils';
+import compression from 'compression';
+import cors from 'cors';
+import express from 'express';
+import mongoSanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
+import httpStatus from 'http-status';
 
 const app = express();
 
-if (env.mode !== "test") {
+if (env.mode !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
 }
@@ -39,16 +39,16 @@ app.use(compression());
 app.use(cors(corsOptions));
 
 // limit repeated failed requests to auth endpoints
-if (env.mode === "production") {
-  app.use("/v1/auth", authLimiter);
+if (env.mode === 'production') {
+  app.use('/v1/auth', authLimiter);
 }
 
 // v1 api routes
-app.use("/v1", routes);
+app.use('/v1', routes);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
-  next(new ApiError(httpStatus.NOT_FOUND, "No Endpoint found"));
+  next(new ApiError(httpStatus.NOT_FOUND, 'No Endpoint found'));
 });
 
 // convert error to ApiError, if needed

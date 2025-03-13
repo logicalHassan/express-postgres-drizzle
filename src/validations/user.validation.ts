@@ -1,6 +1,6 @@
-import { rolesAllowed } from "@/config";
-import Joi from "joi";
-import { objectId, password } from "./custom.validation";
+import { rolesAllowed } from '@/config';
+import Joi from 'joi';
+import { objectId, password } from './custom.validation';
 
 const createUser = {
   body: Joi.object().keys({

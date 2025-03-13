@@ -1,18 +1,18 @@
-import authService from "@/services/auth.service";
-import emailService from "@/services/email.service";
-import tokenService from "@/services/token.service";
-import userService from "@/services/user.service";
-import { ApiError } from "@/utils";
-import { hashPassword } from "@/utils/passwordUtils";
-import type { Request, RequestHandler, Response } from "express";
-import httpStatus from "http-status";
+import authService from '@/services/auth.service';
+import emailService from '@/services/email.service';
+import tokenService from '@/services/token.service';
+import userService from '@/services/user.service';
+import { ApiError } from '@/utils';
+import { hashPassword } from '@/utils/passwordUtils';
+import type { Request, RequestHandler, Response } from 'express';
+import httpStatus from 'http-status';
 
 const register: RequestHandler = async (req: Request, res: Response) => {
   const payload = req.body;
 
   const existingUser = await userService.getUserByEmail(payload.email);
   if (existingUser) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Email is already taken");
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already taken');
   }
 
   const hashedPassword = await hashPassword(payload.password);
@@ -38,7 +38,7 @@ const resetPassword: RequestHandler = async (req: Request, res: Response) => {
   const { token } = req.query;
 
   await authService.resetPassword(token as string, req.body.password);
-  res.status(httpStatus.OK).send({ success: true, message: "Password Reset Successfully!" });
+  res.status(httpStatus.OK).send({ success: true, message: 'Password Reset Successfully!' });
 };
 
 const sendVerificationEmail: RequestHandler = async (req: Request, res: Response) => {
@@ -65,7 +65,7 @@ const verifyEmail: RequestHandler = async (req: Request, res: Response) => {
   await authService.verifyEmail(req.query.token as string);
   res.status(httpStatus.OK).send({
     success: true,
-    message: "Email: Verified successfully!",
+    message: 'Email: Verified successfully!',
   });
 };
 

@@ -1,11 +1,11 @@
-import { env } from "@/config";
-import type { Response } from "express";
-import morgan from "morgan";
-import { logger } from "./logger";
+import { env } from '@/config';
+import type { Response } from 'express';
+import morgan from 'morgan';
+import { logger } from './logger';
 
-morgan.token("message", (req, res: Response) => res.locals.errorMessage || "");
+morgan.token('message', (req, res: Response) => res.locals.errorMessage || '');
 
-const getIpFormat = () => (env.mode === "production" ? ":remote-addr - " : "");
+const getIpFormat = () => (env.mode === 'production' ? ':remote-addr - ' : '');
 const successResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms`;
 const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms - message: :message`;
 

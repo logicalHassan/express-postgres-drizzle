@@ -1,8 +1,8 @@
-import { env } from "@/config";
-import { logger } from "@/config/logger";
-import { ApiError } from "@/utils";
-import type { NextFunction, Request, Response } from "express";
-import httpStatus from "http-status";
+import { env } from '@/config';
+import { logger } from '@/config/logger';
+import { ApiError } from '@/utils';
+import type { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
 
 interface Error {
   message: string;
@@ -22,7 +22,7 @@ export const errorConverter = (err: Error | ApiError, req: Request, res: Respons
 
 export const errorHandler = (err: ApiError, req: Request, res: Response, next: NextFunction) => {
   let { statusCode, message } = err;
-  if (env.mode === "production" && !err.isOperational) {
+  if (env.mode === 'production' && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
   }
@@ -32,10 +32,10 @@ export const errorHandler = (err: ApiError, req: Request, res: Response, next: N
   const response = {
     code: statusCode,
     message,
-    ...(env.mode === "development" && { stack: err.stack }),
+    ...(env.mode === 'development' && { stack: err.stack }),
   };
 
-  if (env.mode === "development") {
+  if (env.mode === 'development') {
     logger.error(err);
   }
 
