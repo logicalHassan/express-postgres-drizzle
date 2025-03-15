@@ -3,11 +3,11 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
 
-## 📌 Overview
+## Overview
 
 This is a well-structured boilerplate for building RESTful APIs using **Node.js**, **Express**, and **TypeScript** with **Drizzle ORM** and **PostgreSQL**. The project is designed for scalability, maintainability, and ease of contribution.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web framework
@@ -17,7 +17,7 @@ This is a well-structured boilerplate for building RESTful APIs using **Node.js*
 - **Docker** (Optional) - Containerized environment
 - **pnpm** - Fast, disk-efficient package manager
 
-## 📁 Folder Structure
+## Folder Structure
 
 ```plaintext
 ├── src/
@@ -44,7 +44,7 @@ This is a well-structured boilerplate for building RESTful APIs using **Node.js*
 ├── README.md           # Documentation
 ```
 
-## 🛠️ Installation
+## Installation
 
 ### Prerequisites
 
@@ -94,7 +94,7 @@ This is a well-structured boilerplate for building RESTful APIs using **Node.js*
    pnpm run dev
    ```
 
-## 📜 Available Scripts
+## Available Scripts
 
 | Command            | Description                                    |
 |--------------------|------------------------------------------------|
@@ -110,8 +110,7 @@ This is a well-structured boilerplate for building RESTful APIs using **Node.js*
 | `pnpm run db:seed`   | Seed database                                |
 | `pnpm run test`   | Run unit tests                                  |
 
-
-## 🐳 Running with Docker
+## Running with Docker
 
 ```sh
 docker-compose up --build
@@ -119,7 +118,7 @@ docker-compose up --build
 
 This will spin up PostgreSQL and the application container.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -128,10 +127,6 @@ Contributions are welcome! Please follow these steps:
 3. Commit your changes with meaningful messages.
 4. Open a pull request.
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License.
-
----
-
-Made with ❤️ by [Muhammad Hassan](https://github.com/logicalHassan)
+This project is licensed under the [MIT](LICENSE) License.
