@@ -1,5 +1,5 @@
 import { env } from '@/config';
-import { hashPassword } from '@/utils/passwordUtils';
+import { hashPassword } from '@/utils/password-hash';
 import db, { pool } from './index';
 import { users } from './schema';
 

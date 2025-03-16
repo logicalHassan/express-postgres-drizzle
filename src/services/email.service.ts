@@ -1,6 +1,6 @@
 import { env } from '@/config';
 import { logger } from '@/config/logger';
-import { PASSWORD_RESET_REQUEST, PASSWORD_RESET_SUCCESS, VERIFICATION_EMAIL } from '@/utils/emailTemplates';
+import { PASSWORD_RESET_REQUEST, PASSWORD_RESET_SUCCESS, VERIFICATION_EMAIL } from '@/utils/email-templates';
 import nodemailer from 'nodemailer';
 
 const transport = nodemailer.createTransport(env.email.smtp);

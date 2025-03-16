@@ -22,7 +22,6 @@ const envVarsSchema = Joi.object()
     SMTP_PASSWORD: Joi.string(),
     EMAIL_FROM: Joi.string(),
     FRONTEND_URL: Joi.string().required(),
-    BACKEND_URL: Joi.string(),
   })
   .unknown();
 

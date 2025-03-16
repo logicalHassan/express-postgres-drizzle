@@ -3,7 +3,7 @@ import emailService from '@/services/email.service';
 import tokenService from '@/services/token.service';
 import userService from '@/services/user.service';
 import { ApiError } from '@/utils';
-import { hashPassword } from '@/utils/passwordUtils';
+import { hashPassword } from '@/utils/password-hash';
 import type { Request, RequestHandler, Response } from 'express';
 import httpStatus from 'http-status';
 

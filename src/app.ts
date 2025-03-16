@@ -2,7 +2,7 @@ import 'express-async-errors';
 import { corsOptions, env } from '@/config';
 import morgan from '@/config/morgan';
 import { errorConverter, errorHandler } from '@/middlewares/error';
-import { authLimiter } from '@/middlewares/rateLimiter';
+import { authLimiter } from '@/middlewares/rate-limiter';
 import routes from '@/routes/v1';
 import { ApiError } from '@/utils';
 import compression from 'compression';

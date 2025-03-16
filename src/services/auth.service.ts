@@ -1,6 +1,6 @@
 import { tokenTypes } from '@/config/tokens';
 import { ApiError } from '@/utils';
-import { isPasswordMatch } from '@/utils/passwordUtils';
+import { isPasswordMatch } from '@/utils/password-hash';
 import httpStatus from 'http-status';
 import tokenService from './token.service';
 import userService from './user.service';
