@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx watch --clear-screen=false src/index.ts",
     "build": "tsc --noEmit && tsup",
-    "start": "node dist/index.js",
+    "start": "pm2 start ecosystem.config.json --no-daemon",
+    "start:dev": "cross-env NODE_ENV=development tsc && tsx src/index",
     "clean": "rm -rf dist",
     "lint": "biome check src/",
     "lint:fix": "biome check src/ --fix",
@@ -42,6 +43,7 @@
     "moment": "^2.30.1",
     "morgan": "^1.10.0",
     "nodemailer": "^6.10.1",
+    "pm2": "^6.0.5",
     "pg": "^8.13.3",
     "validator": "^13.12.0",
     "winston": "^3.17.0"
