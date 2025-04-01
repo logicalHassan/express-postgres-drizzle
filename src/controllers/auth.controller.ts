@@ -1,13 +1,30 @@
-import { Request, Response } from "express";
+import authService from "@/services/auth.service";
+import tokenService from "@/services/token.service";
+import userService from "@/services/user.service";
+import { ApiError } from "@/utils";
+import { hashPassword } from "@/utils/passwordUtils";
+import type { Request, Response } from "express";
+import httpStatus from "http-status";
+
+const register = async (req: Request, res: Response) => {
+  const payload = req.body;
+
+  const existingUser = await userService.getUserByEmail(payload.email);
+  if (existingUser) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email is already taken");
+  }
+
+  const hashedPassword = await hashPassword(payload.password);
+  const user = await userService.createUser({ ...payload, password: hashedPassword });
+
+  res.status(httpStatus.CREATED).send(user);
+};
 
 const login = async (req: Request, res: Response) => {
-  req.user;
-  //   const { email, password } = req.body;
-  //   const user = await authService.loginUserWithEmailAndPassword(email, password);
-  //   const token = await tokenService.generateAuthToken(user);
-  //   res.send({ user, token });
-
-  res.send({ message: "OK" });
+  const { email, password } = req.body;
+  const user = await authService.loginUserWithEmailAndPassword(email, password);
+  const token = await tokenService.generateAuthTokens(user);
+  res.send({ user, token });
 };
 
 const forgotPassword = async (req: Request, res: Response) => {
@@ -42,6 +59,7 @@ const verifyEmail = async (req: Request, res: Response) => {
 };
 
 export default {
+  register,
   login,
   forgotPassword,
   resetPassword,

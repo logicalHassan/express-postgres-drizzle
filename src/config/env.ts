@@ -9,9 +9,13 @@ const envVarsSchema = Joi.object()
     NODE_ENV: Joi.string().valid("production", "development", "test").required(),
     PORT: Joi.number().default(3000),
     DATABASE_URL: Joi.string().required(),
-    JWT_SECRET: Joi.string().required(),
-    JWT_ACCESS_EXPIRATION_DAYS: Joi.number().default(30),
-    JWT_RESET_PASSWORD_EXPIRATION_MINUTES: Joi.number().default(10),
+    JWT_SECRET: Joi.string().required().description("JWT secret key"),
+    JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description("minutes after which access tokens expire"),
+    JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description("days after which refresh tokens expire"),
+    JWT_RESET_PASSWORD_EXPIRATION_MINUTES: Joi.number()
+      .default(10)
+      .description("minutes after which reset password token expires"),
+    JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number(),
     SMTP_HOST: Joi.string(),
     SMTP_PORT: Joi.number(),
     SMTP_USERNAME: Joi.string(),
@@ -36,7 +40,8 @@ export const env = {
   },
   jwt: {
     secret: envVars.JWT_SECRET,
-    accessExpirationDays: envVars.JWT_ACCESS_EXPIRATION_DAYS,
+    accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
+    refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
   },
