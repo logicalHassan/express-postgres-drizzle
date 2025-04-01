@@ -19,4 +19,7 @@ export interface User {
   email: string;
   password: string;
   role: "user" | "admin";
+  isEmailVerified: boolean | null;
+  createdAt: Date | null;
+  updatedAt: Date;
 }

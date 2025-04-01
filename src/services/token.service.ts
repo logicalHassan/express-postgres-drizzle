@@ -4,7 +4,7 @@ import db from "@/db";
 import { tokens } from "@/db/schema";
 import type { User } from "@/types";
 import { ApiError } from "@/utils";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
 import moment from "moment";
@@ -34,8 +34,33 @@ const getToken = async (token: string) => {
   return tokenDoc[0] || null;
 };
 
-const deleteToken = async (token: string) => {
-  await db.delete(tokens).where(eq(tokens.token, token)).execute();
+const deleteToken = async (userId: string, type: string) => {
+  await db
+    .delete(tokens)
+    .where(and(eq(tokens.userId, userId), eq(tokens.type, type)))
+    .execute();
+};
+
+const verifyToken = async (token: string, type: string) => {
+  const payload = jwt.verify(token, env.jwt.secret);
+
+  const tokenDoc = await db
+    .select()
+    .from(tokens)
+    .where(
+      and(
+        eq(tokens.token, token),
+        eq(tokens.type, type),
+        eq(tokens.userId, payload.sub as string),
+        eq(tokens.blacklisted, false),
+      ),
+    );
+
+  if (!tokenDoc || tokenDoc.length === 0) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Token not found or is blacklisted");
+  }
+
+  return tokenDoc[0];
 };
 
 const generateAuthTokens = async (user: User) => {
@@ -101,6 +126,7 @@ export default {
   getToken,
   deleteToken,
   generateToken,
+  verifyToken,
   saveToken,
   generateAuthTokens,
   generateResetPasswordToken,
