@@ -15,17 +15,18 @@
       },
 
       "suspicious": {
-        "noExplicitAny": "warn",
+        "noExplicitAny": "off",
         "noConfusingVoidType": "warn",
         "noDuplicateObjectKeys": "error",
-        "noDuplicateCase": "error"
+        "noDuplicateCase": "error",
+        "noAssignInExpressions": "off"
       },
 
       "style": {
         "noUselessElse": "warn",
         "noVar": "error",
         "useConst": "error",
-        "noNonNullAssertion": "warn"
+        "noNonNullAssertion": "off"
       },
 
       "complexity": {

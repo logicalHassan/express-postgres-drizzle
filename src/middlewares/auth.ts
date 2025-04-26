@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import httpStatus from "http-status";
 import { env } from "@/config";
-import { ApiError } from "@/utils";
 import { tokenTypes } from "@/config/tokens";
+import { ApiError } from "@/utils";
+import type { NextFunction, Request, Response } from "express";
+import httpStatus from "http-status";
+import jwt from "jsonwebtoken";
 
 //TODO: Refactore Auth middleware
 
@@ -11,8 +11,8 @@ import { tokenTypes } from "@/config/tokens";
  * Middleware to authenticate a JWT token and attach the user to the request object.
  */
 const authenticateToken = async (req: Request, res: Response) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.split(" ")[1];
 
   if (!token) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "No token provided");

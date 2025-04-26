@@ -1,10 +1,16 @@
-import httpStatus from "http-status";
 import { env } from "@/config";
 import { logger } from "@/config/logger";
 import { ApiError } from "@/utils";
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
+import httpStatus from "http-status";
 
-export const errorConverter = (err: any, req: Request, res: Response, next: NextFunction) => {
+interface Error {
+  message: string;
+  stack: string;
+  statusCode?: number;
+}
+
+export const errorConverter = (err: Error | ApiError, req: Request, res: Response, next: NextFunction) => {
   let error = err;
   if (!(error instanceof ApiError)) {
     const statusCode = (error.statusCode = httpStatus.INTERNAL_SERVER_ERROR);
@@ -14,7 +20,7 @@ export const errorConverter = (err: any, req: Request, res: Response, next: Next
   next(error);
 };
 
-export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: ApiError, req: Request, res: Response, next: NextFunction) => {
   let { statusCode, message } = err;
   if (env.mode === "production" && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;

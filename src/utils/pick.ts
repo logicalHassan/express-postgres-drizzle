@@ -6,6 +6,6 @@ export const pick = <T extends Record<string, any>, K extends keyof T>(object: T
       }
       return obj;
     },
-    {} as Pick<T, K>
+    {} as Pick<T, K>,
   );
 };
