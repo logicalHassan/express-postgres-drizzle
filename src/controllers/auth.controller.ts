@@ -7,7 +7,7 @@ import { hashPassword } from "@/utils/passwordUtils";
 import type { Request, RequestHandler, Response } from "express";
 import httpStatus from "http-status";
 
-const register = async (req: Request, res: Response) => {
+const register: RequestHandler = async (req: Request, res: Response) => {
   const payload = req.body;
 
   const existingUser = await userService.getUserByEmail(payload.email);
@@ -21,27 +21,27 @@ const register = async (req: Request, res: Response) => {
   res.status(httpStatus.CREATED).send(user);
 };
 
-const login = async (req: Request, res: Response) => {
+const login: RequestHandler = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const token = await tokenService.generateAuthTokens(user);
   res.send({ user, token });
 };
 
-const forgotPassword = async (req: Request, res: Response) => {
+const forgotPassword: RequestHandler = async (req: Request, res: Response) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
   res.status(httpStatus.NO_CONTENT).send();
 };
 
-const resetPassword = async (req: Request, res: Response) => {
+const resetPassword: RequestHandler = async (req: Request, res: Response) => {
   const { token } = req.query;
 
   await authService.resetPassword(token as string, req.body.password);
   res.status(httpStatus.OK).send({ success: true, message: "Password Reset Successfully!" });
 };
 
-const sendVerificationEmail = async (req: Request, res: Response) => {
+const sendVerificationEmail: RequestHandler = async (req: Request, res: Response) => {
   const user = req.user!;
   const { email, isEmailVerified } = user;
 
@@ -61,7 +61,7 @@ const sendVerificationEmail = async (req: Request, res: Response) => {
   });
 };
 
-const verifyEmail = async (req: Request, res: Response) => {
+const verifyEmail: RequestHandler = async (req: Request, res: Response) => {
   await authService.verifyEmail(req.query.token as string);
   res.status(httpStatus.OK).send({
     success: true,

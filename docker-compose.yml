@@ -4,13 +4,34 @@ services:
     image: postgres
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - '5431:5432'
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node-app
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+    env_file:
+      - ./.env.production
+    depends_on:
+      - database
+    networks:
+      - app-network
 
 volumes:
-  db_data:
+  db-data:
+
+networks:
+  app-network:
+    driver: bridge
