@@ -24,9 +24,6 @@ const authenticateToken = async (req: Request, res: Response) => {
   }
 
   const user = await userService.getUserById(payload.sub);
-  if (!user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "User not found");
-  }
 
   req.user = user;
 };
@@ -37,7 +34,7 @@ const authenticateToken = async (req: Request, res: Response) => {
 const auth = (requiredRoles?: string[]) => async (req: Request, res: Response, next: NextFunction) => {
   await authenticateToken(req, res);
   const { role } = req.user!;
-  if (!requiredRoles?.length && !requiredRoles?.includes(role)) {
+  if (requiredRoles?.length && !requiredRoles?.includes(role)) {
     throw new ApiError(httpStatus.FORBIDDEN, "Access denied, Role not allowed");
   }
   next();
