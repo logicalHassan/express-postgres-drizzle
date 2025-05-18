@@ -8,7 +8,11 @@ const envVarsSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
-    DATABASE_URL: Joi.string().required(),
+    DATABASE_USER: Joi.string().required(),
+    DATABASE_PASSWORD: Joi.string().allow('').required(),
+    DATABASE_NAME: Joi.string().required(),
+    DATABASE_HOST: Joi.string().required(),
+    DATABASE_PORT: Joi.number().default(5432),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
@@ -26,6 +30,8 @@ const envVarsSchema = Joi.object()
   .unknown();
 
 const { value: envVars, error } = envVarsSchema.prefs({ errors: { label: 'key' } }).validate(process.env);
+const { DATABASE_USER, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT, DATABASE_NAME } = envVars;
+const databaseUrl = `postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`;
 
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
@@ -35,7 +41,7 @@ export const env = {
   mode: envVars.NODE_ENV,
   port: envVars.PORT,
   db: {
-    url: envVars.DATABASE_URL,
+    url: databaseUrl,
   },
   jwt: {
     secret: envVars.JWT_SECRET,
