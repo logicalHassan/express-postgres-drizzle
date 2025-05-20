@@ -5,7 +5,6 @@ import { users } from './schema';
 
 async function seed() {
   if (env.mode !== 'development') return;
-  console.log('🌱 Seeding database...');
 
   const data = [
     {
@@ -130,13 +129,9 @@ async function seed() {
       .insert(users)
       .values(usersData as (typeof users.$inferInsert)[])
       .onConflictDoNothing(); // ✅ Skips duplicates instead of throwing errors
-
-    console.log('✅ Seeding complete!');
   } catch (error) {
-    console.error('❌ Seeding failed:', error);
   } finally {
     await pool.end();
-    console.log('🔌 Database connection closed.');
   }
 }
 

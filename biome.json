@@ -1,42 +1,61 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "formatter": {
+    "enabled": true,
     "indentStyle": "space",
     "lineWidth": 120,
-    "lineEnding": "lf"
+    "lineEnding": "lf",
+    "indentWidth": 2
   },
-  "organizeImports": { "enabled": true },
   "javascript": {
     "formatter": {
-      "quoteStyle": "single"
+      "quoteStyle": "single",
+      "semicolons": "always",
+      "trailingCommas": "all",
+      "arrowParentheses": "always"
     }
   },
+  "organizeImports": { "enabled": true },
   "linter": {
+    "ignore": ["./src/models/plugins/**/*.ts"],
     "enabled": true,
     "rules": {
       "recommended": true,
       "correctness": {
-        "noUnsafeFinally": "error"
+        "noUnsafeFinally": "error",
+        "noUnusedImports": "error",
+        "noUnusedFunctionParameters": "error"
       },
-
       "suspicious": {
-        "noExplicitAny": "off",
+        "noExplicitAny": "warn",
         "noConfusingVoidType": "warn",
         "noDuplicateObjectKeys": "error",
         "noDuplicateCase": "error",
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+        "noConsole": "warn"
       },
-
       "style": {
-        "noUselessElse": "warn",
+        "noCommaOperator": "error",
+        "noUselessElse": "error",
         "noVar": "error",
         "useConst": "error",
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "noInferrableTypes": "warn",
+        "noParameterAssign": "error",
+        "useThrowOnlyError": "error"
       },
-
       "complexity": {
         "noForEach": "off",
-        "noExcessiveCognitiveComplexity": "warn"
+        "noExcessiveCognitiveComplexity": "warn",
+        "noBannedTypes": "warn",
+        "noEmptyTypeParameters": "error",
+        "noUselessTernary": "error",
+        "useOptionalChain": "error"
+      },
+      "performance": {
+        "noAccumulatingSpread": "error",
+        "noDelete": "warn",
+        "noReExportAll": "error"
       }
     }
   }

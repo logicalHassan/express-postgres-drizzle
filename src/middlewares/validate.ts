@@ -9,7 +9,7 @@ type SchemaObject = {
   body?: ObjectSchema;
 };
 
-const validate = (schema: SchemaObject) => (req: Request, res: Response, next: NextFunction) => {
+const validate = (schema: SchemaObject) => (req: Request, _res: Response, next: NextFunction) => {
   const validSchema = pick(schema, ['params', 'query', 'body']);
   const object = pick(req, Object.keys(validSchema) as (keyof Request)[]);
   const { value, error } = Joi.compile(validSchema)

@@ -10,7 +10,7 @@ interface Error {
   statusCode?: number;
 }
 
-export const errorConverter = (err: Error | ApiError, req: Request, res: Response, next: NextFunction) => {
+export const errorConverter = (err: Error | ApiError, _req: Request, _res: Response, next: NextFunction) => {
   let error = err;
   if (!(error instanceof ApiError)) {
     const statusCode = (error.statusCode = httpStatus.INTERNAL_SERVER_ERROR);
@@ -20,7 +20,7 @@ export const errorConverter = (err: Error | ApiError, req: Request, res: Respons
   next(error);
 };
 
-export const errorHandler = (err: ApiError, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: ApiError, _req: Request, res: Response, _next: NextFunction) => {
   let { statusCode, message } = err;
   if (env.mode === 'production' && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
