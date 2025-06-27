@@ -29,10 +29,20 @@ const login: RequestHandler = async (req, res) => {
   res.send({ user, token });
 };
 
+const logout: RequestHandler = async (req, res) => {
+  await authService.logout(req.body.refreshToken);
+  res.status(httpStatus.OK).send({ success: true, message: 'User logout successfully!' });
+};
+
 const forgotPassword: RequestHandler = async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
   res.status(httpStatus.NO_CONTENT).send();
+};
+
+const refreshTokens: RequestHandler = async (req, res) => {
+  const tokens = await authService.refreshAuth(req.body.refreshToken);
+  res.send({ ...tokens });
 };
 
 const resetPassword: RequestHandler = async (req, res) => {
@@ -72,7 +82,9 @@ const verifyEmail: RequestHandler = async (req, res) => {
 
 export default {
   register,
+  logout,
   login,
+  refreshTokens,
   forgotPassword,
   resetPassword,
   verifyEmail,

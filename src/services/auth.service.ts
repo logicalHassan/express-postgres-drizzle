@@ -13,13 +13,28 @@ const loginUserWithEmailAndPassword = async (email: string, password: string) =>
   return user;
 };
 
+const logout = async (refreshToken: string) => {
+  try {
+    const { user } = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
+
+    if (!user) {
+      throw new Error('User not found for refresh token');
+    }
+
+    await tokenService.deleteToken(user.id, tokenTypes.REFRESH);
+  } catch {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Logout failed');
+  }
+};
+
 const resetPassword = async (resetPasswordToken: string, newPassword: string) => {
   try {
-    const resetPasswordTokenDoc = await tokenService.verifyToken(resetPasswordToken, tokenTypes.RESET_PASSWORD);
-    const user = await userService.getUserById(resetPasswordTokenDoc.userId!);
+    const { user } = await tokenService.verifyToken(resetPasswordToken, tokenTypes.RESET_PASSWORD);
+
     if (!user) {
       throw new Error('User Not Found With Token');
     }
+
     await userService.updateUser(user.id, { password: newPassword });
     await tokenService.deleteToken(user.id, tokenTypes.RESET_PASSWORD);
   } catch (error) {
@@ -27,16 +42,31 @@ const resetPassword = async (resetPasswordToken: string, newPassword: string) =>
   }
 };
 
+const refreshAuth = async (refreshToken: string) => {
+  try {
+    const { user } = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
+
+    if (!user) {
+      throw new Error('User Not Found With Token');
+    }
+
+    await tokenService.deleteToken(user.id, tokenTypes.REFRESH);
+    return tokenService.generateAuthTokens(user);
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
+  }
+};
+
 const verifyEmail = async (verifyEmailToken: string) => {
   try {
-    const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
-    const user = await userService.getUserById(verifyEmailTokenDoc.userId!);
+    const { user } = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
+
     if (!user) {
       throw new Error('User not found with verify Email token');
     }
 
-    await tokenService.deleteToken(user.id, tokenTypes.VERIFY_EMAIL);
     await userService.updateUser(user.id, { isEmailVerified: true });
+    await tokenService.deleteToken(user.id, tokenTypes.VERIFY_EMAIL);
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
   }
@@ -44,6 +74,8 @@ const verifyEmail = async (verifyEmailToken: string) => {
 
 export default {
   loginUserWithEmailAndPassword,
+  logout,
+  refreshAuth,
   resetPassword,
   verifyEmail,
 };

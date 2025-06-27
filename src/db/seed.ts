@@ -1,11 +1,8 @@
-import { env } from '@/config';
 import { hashPassword } from '@/utils/password-hash';
 import db, { pool } from './index';
 import { users } from './schema';
 
 async function seed() {
-  if (env.mode !== 'development') return;
-
   const data = [
     {
       name: 'Vivi',

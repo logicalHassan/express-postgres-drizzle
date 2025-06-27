@@ -1,5 +1,10 @@
+import type { tokens, users } from '@/db/schema';
 import type { Request } from 'express';
 import type { JwtPayload as BaseJwtPayload } from 'jsonwebtoken';
+
+export type UserPayload = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
+export type TokenPayload = typeof tokens.$inferInsert;
 
 export interface PaginateOptions {
   limit?: string;
@@ -14,16 +19,6 @@ export interface PaginateResult<T> {
   limit: number;
   totalPages: number;
   totalResults: number;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'user' | 'admin';
-  isEmailVerified: boolean | null;
-  createdAt: Date | null;
-  updatedAt: Date;
 }
 
 export interface AppJwtPayload extends BaseJwtPayload {

@@ -2,15 +2,13 @@ import { env } from '@/config';
 import { tokenTypes } from '@/config/tokens';
 import db from '@/db';
 import { tokens } from '@/db/schema';
-import type { User } from '@/types';
+import type { TokenPayload, User } from '@/types';
 import { ApiError } from '@/utils';
 import { and, eq } from 'drizzle-orm';
 import httpStatus from 'http-status';
-import jwt from 'jsonwebtoken';
+import jwt, { type JwtPayload } from 'jsonwebtoken';
 import moment from 'moment';
 import userService from './user.service';
-
-type TokenPayload = typeof tokens.$inferInsert;
 
 const generateToken = (userId: string, expires: moment.Moment, type: string, secret = env.jwt.secret) => {
   const payload = {
@@ -23,15 +21,13 @@ const generateToken = (userId: string, expires: moment.Moment, type: string, sec
 };
 
 const saveToken = async (data: TokenPayload) => {
-  // TODO: Handling expires field storage, accepting time
-  const tokenDoc = await db.insert(tokens).values(data).returning();
-
-  return tokenDoc[0];
+  const [tokenDoc] = await db.insert(tokens).values(data).returning();
+  return tokenDoc;
 };
 
 const getToken = async (token: string) => {
-  const tokenDoc = await db.select().from(tokens).where(eq(tokens.token, token)).limit(1).execute();
-  return tokenDoc[0] || null;
+  const [tokenDoc] = await db.select().from(tokens).where(eq(tokens.token, token));
+  return tokenDoc;
 };
 
 const deleteToken = async (userId: string, type: string) => {
@@ -41,26 +37,32 @@ const deleteToken = async (userId: string, type: string) => {
     .execute();
 };
 
-const verifyToken = async (token: string, type: string) => {
-  const payload = jwt.verify(token, env.jwt.secret);
+export const verifyToken = async (token: string, type: string) => {
+  let payload: JwtPayload;
 
-  const tokenDoc = await db
-    .select()
-    .from(tokens)
-    .where(
-      and(
-        eq(tokens.token, token),
-        eq(tokens.type, type),
-        eq(tokens.userId, payload.sub as string),
-        eq(tokens.blacklisted, false),
-      ),
-    );
+  try {
+    payload = jwt.verify(token, env.jwt.secret) as JwtPayload;
+  } catch {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token');
+  }
 
-  if (!tokenDoc || tokenDoc.length === 0) {
+  const tokenDoc = await db.query.tokens.findFirst({
+    where: and(
+      eq(tokens.token, token),
+      eq(tokens.type, type),
+      eq(tokens.userId, payload.sub as string),
+      eq(tokens.blacklisted, false),
+    ),
+    with: {
+      user: true,
+    },
+  });
+
+  if (!tokenDoc) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Token not found or is blacklisted');
   }
 
-  return tokenDoc[0];
+  return tokenDoc;
 };
 
 const generateAuthTokens = async (user: User) => {
@@ -73,7 +75,7 @@ const generateAuthTokens = async (user: User) => {
   await saveToken({
     token: refreshToken,
     userId: user.id,
-    expires: refreshTokenExpires.format('YYYY-MM-DD'),
+    expires: refreshTokenExpires.toDate(),
     type: tokenTypes.REFRESH,
   });
 
@@ -99,7 +101,7 @@ const generateResetPasswordToken = async (email: string) => {
 
   const tokenPayload = {
     token,
-    expires: expires.format('YYYY-MM-DD'),
+    expires: expires.toDate(),
     userId: user.id,
     type: tokenTypes.RESET_PASSWORD,
   };
@@ -114,7 +116,7 @@ const generateVerifyEmailToken = async (user: User) => {
 
   const tokenPayload = {
     token,
-    expires: expires.format('YYYY-MM-DD'),
+    expires: expires.toDate(),
     userId: user.id,
     type: tokenTypes.VERIFY_EMAIL,
   };

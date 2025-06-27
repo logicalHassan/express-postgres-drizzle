@@ -1,19 +1,16 @@
 import db from '@/db';
 import { users } from '@/db/schema';
+import type { User, UserPayload } from '@/types';
 import { ApiError } from '@/utils';
-import { eq } from 'drizzle-orm';
+import { eq, getTableColumns } from 'drizzle-orm';
 import httpStatus from 'http-status';
-
-// Infer types from Drizzle
-type UserPayload = typeof users.$inferInsert;
-type User = typeof users.$inferSelect;
 
 /**
  * Get a user by email
  * @param email - User email
  * @returns Found user or null
  */
-export const getUserByEmail = async (email: string): Promise<User | null> => {
+export const getUserByEmail = async (email: string) => {
   const user = await db.select().from(users).where(eq(users.email, email)).limit(1).execute();
 
   return user[0] || null;
@@ -24,7 +21,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
  * @param data - User data (name, email, password, role, etc.)
  * @returns Created user
  */
-export const createUser = async (data: UserPayload): Promise<User> => {
+export const createUser = async (data: UserPayload) => {
   const [newUser] = await db.insert(users).values(data).returning();
   return newUser;
 };
@@ -43,7 +40,8 @@ export const getAllUsers = async (): Promise<User[]> => {
  * @returns User or null if not found
  */
 export const getUserById = async (id: string): Promise<Omit<User, 'password'>> => {
-  const [user] = await db.select().from(users).where(eq(users.id, id));
+  const { password, ...rest } = getTableColumns(users);
+  const [user] = await db.select(rest).from(users).where(eq(users.id, id));
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
