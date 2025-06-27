@@ -17,7 +17,7 @@
   },
   "organizeImports": { "enabled": true },
   "linter": {
-    "ignore": ["./src/models/plugins/**/*.ts"],
+    "ignore": ["./db/migrations"],
     "enabled": true,
     "rules": {
       "recommended": true,

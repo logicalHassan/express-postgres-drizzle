@@ -2,7 +2,7 @@ import { env } from '@/config';
 import { tokenTypes } from '@/config/tokens';
 import db from '@/db';
 import { tokens } from '@/db/schema';
-import type { TokenPayload, User } from '@/types';
+import type { SafeUser, TokenPayload } from '@/types';
 import { ApiError } from '@/utils';
 import { and, eq } from 'drizzle-orm';
 import httpStatus from 'http-status';
@@ -65,7 +65,7 @@ export const verifyToken = async (token: string, type: string) => {
   return tokenDoc;
 };
 
-const generateAuthTokens = async (user: User) => {
+const generateAuthTokens = async (user: SafeUser) => {
   const accessTokenExpires = moment().add(env.jwt.accessExpirationMinutes, 'minutes');
   const accessToken = generateToken(user.id, accessTokenExpires, tokenTypes.ACCESS);
 
@@ -110,7 +110,7 @@ const generateResetPasswordToken = async (email: string) => {
   return token;
 };
 
-const generateVerifyEmailToken = async (user: User) => {
+const generateVerifyEmailToken = async (user: SafeUser) => {
   const expires = moment().add(env.jwt.verifyEmailExpirationMinutes, 'minutes');
   const token = generateToken(user.id, expires, tokenTypes.VERIFY_EMAIL);
 

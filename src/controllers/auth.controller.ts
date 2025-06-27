@@ -3,22 +3,12 @@ import emailService from '@/services/email.service';
 import tokenService from '@/services/token.service';
 import userService from '@/services/user.service';
 import type { AuthedReq } from '@/types';
-import { ApiError } from '@/utils';
-import { hashPassword } from '@/utils/password-hash';
 import type { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 
 const register: RequestHandler = async (req, res) => {
   const payload = req.body;
-
-  const existingUser = await userService.getUserByEmail(payload.email);
-  if (existingUser) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already taken');
-  }
-
-  const hashedPassword = await hashPassword(payload.password);
-  const user = await userService.createUser({ ...payload, password: hashedPassword });
-
+  const user = await userService.createUser(payload);
   res.status(httpStatus.CREATED).send(user);
 };
 

@@ -8,18 +8,44 @@ const createUser: RequestHandler = async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 };
 
-const getAllUsers: RequestHandler = async (_req, res) => {
-  const users = await userService.getAllUsers();
-  res.status(httpStatus.OK).send(users);
-};
-
 const getUser: RequestHandler = async (req, res) => {
   const user = await userService.getUserById(req.params.userId);
   res.status(httpStatus.OK).send(user);
 };
 
+export const getUsers: RequestHandler = async (req, res) => {
+  const query = req.query as Record<string, any>;
+
+  const { page, limit, sortBy, order, ...filters } = query;
+
+  const offset = (page - 1) * limit;
+
+  const pagination = {
+    limit,
+    offset,
+    sortBy,
+    order,
+  };
+
+  const result = await userService.queryUsers({ pagination, filters });
+
+  res.send(result);
+};
+
+const updateUser: RequestHandler = async (req, res) => {
+  const user = await userService.updateUser(req.params.userId, req.body);
+  res.send(user);
+};
+
+const deleteUser: RequestHandler = async (req, res) => {
+  await userService.deleteUser(req.params.userId);
+  res.status(httpStatus.NO_CONTENT).send();
+};
+
 export default {
-  getAllUsers,
   createUser,
+  getUsers,
   getUser,
+  updateUser,
+  deleteUser,
 };

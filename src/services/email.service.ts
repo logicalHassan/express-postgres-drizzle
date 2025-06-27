@@ -18,7 +18,6 @@ const sendEmail = async (to: string, subject: string, html: string) => {
   await transport.sendMail(msg);
 };
 
-//* Send reset password email
 const sendResetPasswordEmail = async (to: string, token: string) => {
   const subject = 'Reset password';
   const resetPasswordUrl = `${env.frontend.url}/reset-password?token=${token}`;
@@ -26,14 +25,12 @@ const sendResetPasswordEmail = async (to: string, token: string) => {
   await sendEmail(to, subject, html);
 };
 
-//* Notify the user of a successful password reset
 const sendPasswordRestSuccessEmail = async (to: string) => {
   const subject = 'Password reset successful';
   const html = PASSWORD_RESET_SUCCESS;
   await sendEmail(to, subject, html);
 };
 
-//* Send verification email
 const sendVerificationEmail = async (to: string, otp: string) => {
   const subject = 'Email Verification';
   const html = VERIFICATION_EMAIL(otp);
