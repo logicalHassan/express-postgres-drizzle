@@ -1,5 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "files": {
+    "include": ["src/**/*.ts"],
+    "ignoreUnknown": true
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -17,7 +21,6 @@
   },
   "organizeImports": { "enabled": true },
   "linter": {
-    "ignore": ["./db/migrations"],
     "enabled": true,
     "rules": {
       "recommended": true,
