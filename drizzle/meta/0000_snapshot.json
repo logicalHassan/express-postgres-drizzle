@@ -1,5 +1,5 @@
 {
-  "id": "ad406ba8-3a11-48a9-855e-2b48125f57ed",
+  "id": "fe23fd4a-d890-43d2-9012-5b9b8da402d2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -68,8 +68,12 @@
           "name": "tokens_user_id_users_id_fk",
           "tableFrom": "tokens",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -79,7 +83,9 @@
         "tokens_token_unique": {
           "name": "tokens_token_unique",
           "nullsNotDistinct": false,
-          "columns": ["token"]
+          "columns": [
+            "token"
+          ]
         }
       },
       "policies": {},
@@ -152,7 +158,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -164,12 +172,20 @@
     "public.role": {
       "name": "role",
       "schema": "public",
-      "values": ["user", "admin"]
+      "values": [
+        "user",
+        "admin"
+      ]
     },
     "public.token_type": {
       "name": "token_type",
       "schema": "public",
-      "values": ["access", "refresh", "resetPassword", "verifyEmail"]
+      "values": [
+        "access",
+        "refresh",
+        "resetPassword",
+        "verifyEmail"
+      ]
     }
   },
   "schemas": {},

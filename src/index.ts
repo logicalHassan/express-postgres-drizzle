@@ -38,12 +38,26 @@ const unexpectedErrorHandler = (error: unknown) => {
   exitHandler();
 };
 
+const gracefulShutdown = () => {
+  if (server) {
+    server.close(() => {
+      logger.info('Server closed gracefully');
+      process.exit(0);
+    });
+  } else {
+    process.exit(0);
+  }
+};
+
 process.on('uncaughtException', unexpectedErrorHandler);
 process.on('unhandledRejection', unexpectedErrorHandler);
 
 process.on('SIGTERM', () => {
-  logger.info('SIGTERM received');
-  if (server) {
-    server.close();
-  }
+  logger.info('SIGTERM signal received.');
+  gracefulShutdown();
+});
+
+process.on('SIGINT', () => {
+  logger.info('SIGINT signal received (Ctrl+C).');
+  gracefulShutdown();
 });

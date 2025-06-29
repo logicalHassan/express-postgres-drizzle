@@ -8,16 +8,15 @@
     "build": "tsc --noEmit && tsup",
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "start:dev": "tsc && cross-env NODE_ENV=development  tsx src/index",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "lint": "biome check src/",
     "lint:fix": "biome check src/ --fix",
     "format": "biome format src/ --fix",
     "test": "echo Add a test library",
     "db:migrate": "npx drizzle-kit generate",
     "db:push": "npx drizzle-kit push",
-    "db:pull": "npx drizzle-kit pull",
     "db:sync": "npm run db:migrate && npm run db:push",
-    "db:reset": "rm -rf src/db/migrations && npm run db:migrate && npm run db:push",
+    "db:reset": "rimraf drizzle && npm run db:migrate && npm run db:push",
     "db:studio": "npx drizzle-kit studio",
     "db:seed": "tsx src/db/seed.ts",
     "docker:start": "docker compose up --env-file ./.env --build -d",
@@ -44,8 +43,9 @@
     "moment": "^2.30.1",
     "morgan": "^1.10.0",
     "nodemailer": "^6.10.1",
-    "pm2": "^6.0.5",
     "pg": "^8.13.3",
+    "pm2": "^6.0.5",
+    "rimraf": "^6.0.1",
     "validator": "^13.12.0",
     "winston": "^3.17.0"
   },
@@ -68,12 +68,19 @@
     "typescript": "^5.7.3"
   },
   "lint-staged": {
-    "*.{js,ts,cjs,mjs,d.cts,d.mts,json,jsonc}": ["biome check --write --no-errors-on-unmatched"]
+    "*.{js,ts,cjs,mjs}": [
+      "biome check --write --no-errors-on-unmatched"
+    ]
   },
   "tsup": {
-    "entry": ["src", "!src/types", "!src/db/migrations/**", "!src/**/__tests__/**", "!src/**/*.test.*"],
+    "entry": [
+      "src",
+      "!src/types",
+      "!src/db/migrations/**",
+      "!src/**/__tests__/**",
+      "!src/**/*.test.*"
+    ],
     "splitting": false,
-    "sourcemap": true,
     "clean": true
   },
   "packageManager": "pnpm@10.2.0"
