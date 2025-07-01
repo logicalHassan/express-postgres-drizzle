@@ -1,10 +1,10 @@
 services:
   database:
     container_name: postgresql
-    image: postgres
+    image: postgres:17
     restart: unless-stopped
     ports:
-      - '5431:5432'
+      - "5432:5432"
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -21,7 +21,7 @@ services:
     container_name: node-app
     restart: unless-stopped
     ports:
-      - '5000:5000'
+      - "5000:5000"
     env_file:
       - ./.env.production
     depends_on:

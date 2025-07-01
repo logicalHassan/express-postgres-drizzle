@@ -56,8 +56,3 @@ process.on('SIGTERM', () => {
   logger.info('SIGTERM signal received.');
   gracefulShutdown();
 });
-
-process.on('SIGINT', () => {
-  logger.info('SIGINT signal received (Ctrl+C).');
-  gracefulShutdown();
-});
