@@ -1,52 +1,51 @@
 import { rolesAllowed } from '@/config';
-import Joi from 'joi';
-import { objectId, password } from './custom.validation';
+import { z } from 'zod';
+import { isPassword } from './custom.validation';
 
 const createUser = {
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
-    role: Joi.string()
-      .required()
-      .valid(...rolesAllowed),
+  body: z.object({
+    email: z.string().email(),
+    password: isPassword,
+    name: z.string(),
+    role: z.enum(rolesAllowed),
   }),
 };
 
 const getUsers = {
-  query: Joi.object().keys({
-    name: Joi.string(),
-    address: Joi.string(),
-    role: Joi.string(),
-    sortBy: Joi.string().default('createdAt'),
-    order: Joi.string().valid('asc', 'desc').default('desc'),
-    limit: Joi.number().integer().min(1).default(10),
-    page: Joi.number().integer().min(1).default(1),
+  query: z.object({
+    name: z.string().optional(),
+    role: z.string().optional(),
+    sortBy: z.string().optional(),
+    limit: z.string().optional(),
+    order: z.string().optional(),
+    page: z.string().optional(),
   }),
 };
 
 const getUser = {
-  params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+  params: z.object({
+    userId: z.string().uuid(),
   }),
 };
 
 const updateUser = {
-  params: Joi.object().keys({
-    userId: Joi.required().custom(objectId),
+  params: z.object({
+    userId: z.string().uuid(),
   }),
-  body: Joi.object()
-    .keys({
-      email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      name: Joi.string(),
+  body: z
+    .object({
+      email: z.string().email().optional(),
+      password: isPassword.optional(),
+      name: z.string().optional(),
     })
-    .min(1),
+    .refine((data) => Object.keys(data).length > 0, {
+      message: 'At least one field must be provided',
+    }),
 };
 
 const deleteUser = {
-  params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+  params: z.object({
+    userId: z.string().uuid(),
   }),
 };
 

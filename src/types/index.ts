@@ -1,5 +1,6 @@
 import type { rolesAllowed } from '@/config';
 import type { tokens, users } from '@/db/schema';
+import type { SQL } from 'drizzle-orm';
 import type { Request } from 'express';
 import type { JwtPayload as BaseJwtPayload } from 'jsonwebtoken';
 
@@ -9,14 +10,14 @@ export type UserPayload = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type TokenPayload = typeof tokens.$inferInsert;
 
-export interface PaginateOptions {
-  limit?: string;
+export interface PaginationOptions {
   page?: string;
+  limit?: string;
   sortBy?: string;
-  populate?: string;
+  order?: string;
 }
 
-export interface PaginateResult<T> {
+export interface PaginatedResult<T> {
   results: T[];
   page: number;
   limit: number;
@@ -24,17 +25,10 @@ export interface PaginateResult<T> {
   totalResults: number;
 }
 
-export interface UserQueryOptions {
-  pagination: {
-    limit: number;
-    offset: number;
-    sortBy: keyof SafeUser;
-    order: 'asc' | 'desc';
-  };
-  filters: {
-    name?: string;
-    role?: UserRole;
-  };
+export interface PaginateParams<TTable> {
+  table: TTable;
+  filters?: SQL[];
+  options?: PaginationOptions;
 }
 
 export interface AppJwtPayload extends BaseJwtPayload {

@@ -1,51 +1,54 @@
-import Joi from 'joi';
-import { password } from './custom.validation';
+import { z } from 'zod';
+import { isPassword } from './custom.validation';
 
 const register = {
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+  body: z.object({
+    name: z
+      .string()
+      .min(3, { message: 'Name must be at least 3 characters long' })
+      .max(20, { message: 'Name must be at most 20 characters long' }),
+    email: z.string().email(),
+    password: isPassword,
   }),
 };
 
 const login = {
-  body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required(),
+  body: z.object({
+    email: z.string(),
+    password: z.string(),
   }),
 };
 
 const logout = {
-  body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
+  body: z.object({
+    refreshToken: z.string(),
   }),
 };
 
 const refreshTokens = {
-  body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
+  body: z.object({
+    refreshToken: z.string(),
   }),
 };
 
 const forgotPassword = {
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
+  body: z.object({
+    email: z.string().email(),
   }),
 };
 
 const resetPassword = {
-  query: Joi.object().keys({
-    token: Joi.string().required(),
+  query: z.object({
+    token: z.string(),
   }),
-  body: Joi.object().keys({
-    password: Joi.string().required().custom(password),
+  body: z.object({
+    password: isPassword,
   }),
 };
 
 const verifyEmail = {
-  query: Joi.object().keys({
-    token: Joi.string().required(),
+  query: z.object({
+    token: z.string(),
   }),
 };
 

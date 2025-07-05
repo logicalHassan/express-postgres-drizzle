@@ -1,4 +1,6 @@
 import userService from '@/services/user.service';
+import type { GetUsersQuery } from '@/types/validation.types';
+import { pick } from '@/utils';
 import type { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 
@@ -14,21 +16,11 @@ const getUser: RequestHandler = async (req, res) => {
 };
 
 export const getUsers: RequestHandler = async (req, res) => {
-  const query = req.query as Record<string, any>;
+  const query = req.query as GetUsersQuery;
+  const options = pick(query, ['page', 'limit', 'sortBy', 'order']);
+  const filters = pick(query, ['role', 'name']);
 
-  const { page, limit, sortBy, order, ...filters } = query;
-
-  const offset = (page - 1) * limit;
-
-  const pagination = {
-    limit,
-    offset,
-    sortBy,
-    order,
-  };
-
-  const result = await userService.queryUsers({ pagination, filters });
-
+  const result = await userService.queryUsers(options, filters);
   res.send(result);
 };
 

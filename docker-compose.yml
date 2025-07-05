@@ -23,7 +23,7 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - ./.env.production
+      - ./.env
     depends_on:
       - database
     networks:
