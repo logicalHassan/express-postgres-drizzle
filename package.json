@@ -21,6 +21,7 @@
     "db:seed": "tsx src/db/seed.ts",
     "docker:start": "docker compose up --env-file ./.env.production --build -d",
     "docker:db": "docker compose up -d database",
+    "generate": "plop",
     "prepare": "husky"
   },
   "keywords": [],
@@ -63,6 +64,7 @@
     "@types/validator": "^13.12.2",
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.30.5",
+    "plop": "^4.0.1",
     "husky": "^9.1.7",
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",

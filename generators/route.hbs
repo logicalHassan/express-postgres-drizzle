@@ -1,0 +1,12 @@
+import {{camelCase name}}Controller from '@/controllers/{{fileName}}.controller';
+import auth from '@/middlewares/auth';
+import validate from '@/middlewares/validate';
+import {{camelCase name}}Validation from '@/validations/{{fileName}}.validation';
+import express from 'express';
+
+const router = express.Router();
+
+router.route('/')
+  .get(validate({{camelCase name}}Validation.get{{pascalCase name}}), {{camelCase name}}Controller.get{{pascalCase name}});
+
+export default router;
