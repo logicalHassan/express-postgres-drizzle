@@ -72,14 +72,14 @@ module.exports = (plop) => {
 
         actions.push({
           type: 'modify',
-          path: `${basePath}/routes/index.ts`,
+          path: `${basePath}/routes/v1/index.ts`,
           pattern: /(import express from 'express';\n)/,
           template: `$1import ${variableName}Route from './${fileName}.routes';\n`,
         });
 
         actions.push({
           type: 'modify',
-          path: `${basePath}/routes/index.ts`,
+          path: `${basePath}/routes/v1/index.ts`,
           pattern: /(const defaultRoutes = \[\n)/,
           template: `$1  {\n    path: '/${fileName}',\n    route: ${variableName}Route,\n  },\n`,
         });
