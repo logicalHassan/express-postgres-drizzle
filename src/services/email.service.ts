@@ -31,9 +31,10 @@ const sendPasswordRestSuccessEmail = async (to: string) => {
   await sendEmail(to, subject, html);
 };
 
-const sendVerificationEmail = async (to: string, otp: string) => {
+const sendVerificationEmail = async (to: string, verifyEmailToken: string) => {
   const subject = 'Email Verification';
-  const html = VERIFICATION_EMAIL(otp);
+  const emailVerificationUrl = `${env.frontend.url}/verify-email?token=${verifyEmailToken}`;
+  const html = VERIFICATION_EMAIL(emailVerificationUrl);
   await sendEmail(to, subject, html);
 };
 

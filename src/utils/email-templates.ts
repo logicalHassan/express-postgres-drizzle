@@ -1,32 +1,24 @@
-const VERIFICATION_EMAIL = (verificationCode: string) => `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Your Email</title>
-</head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
-    <h1 style="color: white; margin: 0;">Verify Your Email</h1>
+const VERIFICATION_EMAIL = (emailVerificationUrl: string) => `
+<div style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border: 1px solid #dddddd;">
+  <div style="background-color: #4CAF50; color: white; text-align: center; padding: 10px 0;">
+      <h1>Email Verification</h1>
   </div>
-  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,</p>
-    <p>Thank you for signing up! Your verification code is:</p>
-    <div style="text-align: center; margin: 30px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #4CAF50;">${verificationCode}</span>
-    </div>
-    <p>Enter this code on the verification page to complete your registration.</p>
-    <p>This code will expire in 15 minutes for security reasons.</p>
-    <p>If you didn't create an account with us, please ignore this email.</p>
-    <p>Best regards,<br>IT Department, GICG</p>
+  <div style="margin: 20px 0;">
+      <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="text-align: center;">
+              <a href="${emailVerificationUrl}" style="text-decoration: none; cursor: pointer; border-radius: 7px; padding: .8rem 1rem; background-color: #000; color: #fff; font-size: 1rem; display: inline-block;">
+                Click For Email Verification
+              </a>
+            </td>
+          </tr>
+      </table>
   </div>
-  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
-    <p>This is an automated message, please do not reply to this email.</p>
+  <div style="text-align: center; margin: 20px 0; color: #777777; font-size: 12px;">
+      <p>This is an automated message, please do not reply.</p>
   </div>
-</body>
-</html>
-`;
+</div>
+  `;
 
 const PASSWORD_RESET_REQUEST = (resetURL: string) => `
 <!DOCTYPE html>
