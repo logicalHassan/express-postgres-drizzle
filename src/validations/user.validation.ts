@@ -1,5 +1,5 @@
 import { rolesAllowed } from '@/config';
-import { z } from 'zod';
+import { strictZod as z } from '@/utils/strict-zod';
 import { isPassword } from './custom.validation';
 
 const createUser = {
