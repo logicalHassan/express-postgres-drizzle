@@ -23,6 +23,8 @@ const validate = (schema: SchemaObject) => (req: Request, _res: Response, next: 
         .join(', ');
       return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
     }
+
+    Object.assign(req, { [key]: result.data });
   }
 
   next();
